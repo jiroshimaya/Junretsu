@@ -17,6 +17,39 @@
 </body>
 <script>
 	var members = ["sakai.jpg","gogami.jpg","shirakawa.jpg","odai.jpg"];
-	
+	var plist = [];
+
+	for(var i=0;i<members.length;i++){
+		//console.log("i:"+String(i));
+
+		for(var j=0;j<members.length;j++){
+			if(i!=j){
+				//console.log("j:"+String(j));
+				for(var k=0;k<members.length;k++){
+					if(i!=k&&j!=k){
+						//console.log("k:"+k);
+						for(var l=0;l<members.length;l++){
+							if(i!=l&&j!=l&&k!=l){
+								//console.log("l:"+l);
+								plist.push([i,j,k,l]);
+							}
+						}
+					}
+
+				}
+			}
+
+		}
+	}
+
+	for(var i=0;i<plist.length;i++){
+		var tmp = plist[i];
+		for(var j=0;j<tmp.length;j++){
+			$("body").append("<img width='50' src='pict/"+members[tmp[j]]+"'>");
+		}
+		$("body").append("<br>");
+	}
+
+
 
 </script>
