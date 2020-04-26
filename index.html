@@ -43,6 +43,13 @@ const shuffle = ([...array]) => {
 	return array;
 }
 
+const isSmartPhone = () => {  
+	  if (navigator.userAgent.match(/iPhone|Android.+Mobile/)) {  
+	    return true;  
+	  } else {  
+	    return false;  
+	  }  
+	}  
 //ダブルタップ無効
 let lastTouch = 0;
 document.addEventListener('touchend', event => {
@@ -57,11 +64,12 @@ document.addEventListener('touchend', event => {
 <script>
 const area = $('.main');
 let members = ["sakai.jpg","gogami.jpg","shirakawa.jpg","odai.jpg"]
+const pict_dir = isSmartPhone() ? 'pict_light/': 'pict/'
 const display = () => {
 	area.html('');
 	let randomized = shuffle(members);
 	for(let v of randomized){
-		area.append("<img width='25%' src='pict/"+v+"'>");
+		area.append("<img width='25%' src='"+pict_dir+v+"'>");
 	}
 	BtnArea.addCount(randomized);
 }
