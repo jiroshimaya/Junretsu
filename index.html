@@ -26,7 +26,7 @@
 		<div class="main"></div>
 		<div class='btn-area'></div>
 		<div class="supplement-area">
-			<br>
+			<br><br><br><br>
 			<div>写真拝借元：<a href="http://junretsu-official.com/profile.php">http://junretsu-official.com/profile.php</a></div>
 			<div>--------</div>
 			<div>更新履歴</div>
@@ -42,6 +42,16 @@ const shuffle = ([...array]) => {
 	}
 	return array;
 }
+
+//ダブルタップ無効
+let lastTouch = 0;
+document.addEventListener('touchend', event => {
+  const now = window.performance.now();
+  if (now - lastTouch <= 500) {
+    event.preventDefault();
+  }
+  lastTouch = now;
+}, true);
 </script>
 <script>
 const area = $('.main');
@@ -88,11 +98,9 @@ const BtnArea = (()=>{
 			const msec = (Date.now()-start_time)/1000;
 			alert("おめでとうございます。あなたは"+button_count+"回ボタンを押し、"+String(msec)+"秒かけてすべての順列を登場させました");
 			goal_result.push([msec,button_count]);
-			console.log(displayed_junretsu);
 			displayed_junretsu = []
 			start_time = null;
 			button_count = 0;
-			
 		}
 	}
 	return {
