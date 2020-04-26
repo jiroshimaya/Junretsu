@@ -1,57 +1,107 @@
 <!DOCTYPE html>
 
-<script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
-<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	 <!-- jquery cdn -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<!-- jquery ui cdn -->
+	<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+
+	<!-- bootstrap4 cdn (jsはjqueryよりあとに読み込む)-->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
 <html lang="en">
 <head>
 	<meta charset="utf-8" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-	<title>Audience Response System</title>
+	<title>純烈の順列</title>
 	<meta name="description" content="純烈の順列" />
 	<meta name="author" content="Jiro Shimaya" />
 	<meta name="viewport" content="width=device-width,initial-scale=1" />
 </head>
 <body>
-	<div class="main"></div>
+	<div class="container">
+		<div class="setting"></div>
+		<div class="main"></div>
+		<div class='btn-area'></div>
+		<div class="supplement-area">
+			<br>
+			<div>写真拝借元：<a href="http://junretsu-official.com/profile.php">http://junretsu-official.com/profile.php</a></div>
+			<div>--------</div>
+			<div>更新履歴</div>
+			<div>2020/04/26 Webページ公開</div>
+		</div>
+	</div>
 </body>
+<script>
+const shuffle = ([...array]) => {
+	for (let i = array.length - 1; i >= 0; i--) {
+		const j = Math.floor(Math.random() * (i + 1));
+		[array[i], array[j]] = [array[j], array[i]];
+	}
+	return array;
+}
+</script>
 <script>
 const area = $('.main');
 let members = ["sakai.jpg","gogami.jpg","shirakawa.jpg","odai.jpg"]
-	var members = ;
-	var plist = [];
+const display = () => {
+	area.html('');
+	let randomized = shuffle(members);
+	for(let v of randomized){
+		area.append("<img width='100px' src='pict/"+v+"'>");
+	}
+	BtnArea.addCount(randomized);
+}
 
-	for(var i=0;i<members.length;i++){
-		//console.log("i:"+String(i));
-
-		for(var j=0;j<members.length;j++){
-			if(i!=j){
-				//console.log("j:"+String(j));
-				for(var k=0;k<members.length;k++){
-					if(i!=k&&j!=k){
-						//console.log("k:"+k);
-						for(var l=0;l<members.length;l++){
-							if(i!=l&&j!=l&&k!=l){
-								//console.log("l:"+l);
-								plist.push([i,j,k,l]);
-							}
-						}
-					}
-
-				}
-			}
-
+const BtnArea = (()=>{
+	const area = $('.btn-area');
+	const btn = $('<button>次の順列を表示</button>');
+	btn.addClass('btn btn-secondary');
+	area.append(btn);
+	
+	btn.click(()=>{
+		display();
+	});
+	
+	let displayed_junretsu = []
+	let goal_result = [];
+	let button_count = 0;
+	let start_time = null;
+	
+	area.append('<span> 登場した順列：</span>');
+	const count_area = $('<span>0</span>');
+	area.append(count_area);
+	area.append('<span>種類</span>');
+	
+	const addCount = junretsu => {
+		if(start_time === null)start_time = Date.now();
+		button_count += 1;
+		j_str = JSON.stringify(junretsu);
+		if(displayed_junretsu.includes(j_str) == false){
+			displayed_junretsu.push(j_str);
+			count_area.html(displayed_junretsu.length);
+		}
+			
+		if(displayed_junretsu.length == 24){
+			const msec = (Date.now()-start_time)/1000;
+			alert("おめでとうございます。あなたは"+button_count+"回ボタンを押し、"+String(msec)+"秒かけてすべての順列を登場させました");
+			goal_result.push([msec,button_count]);
+			console.log(displayed_junretsu);
+			displayed_junretsu = []
+			start_time = null;
+			button_count = 0;
+			
 		}
 	}
-
-	for(var i=0;i<plist.length;i++){
-		var tmp = plist[i];
-		for(var j=0;j<tmp.length;j++){
-			$("body").append("<img width='50' src='pict/"+members[tmp[j]]+"'>");
-		}
-		$("body").append("<br>");
+	return {
+		addCount: addCount
 	}
+})();
+
+display();
+
 
 
 
